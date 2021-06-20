@@ -1,0 +1,73 @@
+<!doctype html>
+<!-- 
+Mesa y sillas modelo 3d
+-->
+<html lang="es">
+	<head>
+		<meta charset='utf-8'>
+		<title>Mueble 3D</title>
+	</head>
+	<body>
+		<!-- Contenedor del app -->
+		<div id="container"></div>
+
+		<!-- Scripts de biblioteca -->
+		<script src="GLTFLoader.js"></script>
+		<script src="lib/three.min_r96.js"></script>
+		<script src="lib/OrbitControls.js"></script>
+		<script src="three.min.js"></script>
+		<!-- <script src="threejs/modelo.js"></script>-->
+		<script>
+			let scene, camera, renderer;
+			function init(){
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color(0x808080);
+				camera = new THREE.PerspectiveCamera(40,window.innerWidth/window.innerHeight,1,5000);
+				camera.rotation.y = 45/180*Math.PI;
+				camera.position.x = 800;
+				camera.position.y = 100;
+				camera.position.z = 1000;
+				
+				
+				renderer = new THREE.WebGLRenderer({antialias:true});
+				renderer.setSize(window.innerWidth,window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+				
+				hlight = new THREE.AmbientLight (0x404040,100);
+				scene.add(hlight);
+				directionalLight = new THREE.DirectionalLight(0xffffff,100);
+				directionalLight.position.set(0,1,0);
+				directionalLight.castShadow = true;
+				scene.add(directionalLight);
+				light = new THREE.PointLight(0xc4c4c4,10);
+				light.position.set(0,300,500);
+				scene.add(light);
+				light2 = new THREE.PointLight(0xc4c4c4,10);
+				light2.position.set(500,100,0);
+				scene.add(light2);
+				light3 = new THREE.PointLight(0xc4c4c4,10);
+				light3.position.set(0,100,-500);
+				scene.add(light3);
+				light4 = new THREE.PointLight(0xc4c4c4,10);
+				light4.position.set(-500,300,500);
+				scene.add(light4);
+				
+			/**	renderer.setClearColor( new THREE.Color(0xFFFFFF) );
+				document.getElementById('container').appendChild( renderer.domElement );
+				var aspectRatio = window.innerWidth / window.innerHeight;		
+				camera.position.set( 1, 1.5, 2 );
+				cameraControls = new THREE.OrbitControls( camera, renderer.domElement );
+				cameraControls.target.set( 0, 0, 0 );
+				window.addEventListener('resize', updateAspectRatio );
+			**/  
+				let loader = new THREE.GLTFLoader();
+					loader.load('scene.gltf', function(gltf){
+					car = gltf.scene.children[0];
+					car.scale.set(0.5,0.5,0.5);
+					scene.add(gltf.scene);
+					animate();
+				});
+			}		
+		</script>
+	</body>
+</html>
