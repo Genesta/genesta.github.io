@@ -1,2 +1,0 @@
-# genesta.github.io
-AGM
