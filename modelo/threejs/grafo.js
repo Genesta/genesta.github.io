@@ -9,10 +9,13 @@
 
 // Variables globales estandar
 var renderer, scene, camera;
+var blanco = THREE.ImageUtils.loadTexture('images/blanco.jpeg');
+var marron = THREE.ImageUtils.loadTexture('images/marron.png');
+var natural = THREE.ImageUtils.loadTexture('images/natural.png');
 
 // Otras variables
 
-var esfera, cubo, conjunto;
+var conjunto;
 
 //dependientes del tiempo
 var angulo =0 ;
@@ -46,17 +49,12 @@ function loadScene() {
 	// Objeto contenedor de cubo y esfera
 	conjunto = new THREE.Object3D();
 	conjunto.position.y = 1;
-/****************CUBO***********************/
+
 	// Cubo
-	var geoCubo = new THREE.BoxGeometry(2,2,2);
-	var matCubo = new THREE.MeshBasicMaterial( {color:'green',wireframe:true} );
-	var cubo = new THREE.Mesh( geoCubo, matCubo );
-	cubo.position.x = 2;
+
 
 	// Esfera
-	var geoEsfera = new THREE.SphereGeometry( 1, 30, 30 );
-	var material = new THREE.MeshBasicMaterial( {color:'yellow', wireframe: true} );
-	esfera = new THREE.Mesh( geoEsfera, material );
+
 
 	// Suelo
 	var geoSuelo = new THREE.PlaneGeometry(10,10,12,12);
@@ -66,36 +64,27 @@ function loadScene() {
 	suelo.position.y = -0.1;
 
 	// Objeto importado
-	var loader = new THREE.ObjectLoader();
-	loader.load( 'mueble/scene.gltf', 
+	/*var loader = new THREE.ObjectLoader();
+	loader.load( 'models/soldado/soldado.json', 
 		         function (objeto){
                     objeto.scale.set(0.8,0.8,0.8);
                     objeto.position.y = -1;
 		         	objeto.rotation.y = Math.PI/2;
 		         	cubo.add(objeto);
-		         });
+		         });*/
+				 
+	var gloader = new THREE.GLTFLoader();
+	loader.load('mueble/scene.gltf', function(gltf){
+			mesa = gltf.scene.children[0];
+			mesa.scale.set(0.8,0.8,0.8);
+			scene.add(gltf.scene);
+			animate();
+	});
 
-	// Texto
-	var fontLoader = new THREE.FontLoader();
-	fontLoader.load( 'fonts/gentilis_bold.typeface.json',
-		             function(font){
-		             	var geoTexto = new THREE.TextGeometry( 
-		             		'STARS WAR',
-		             		{
-		             			size: 0.5,
-		             			height: 0.1,
-		             			curveSegments: 3,
-		             			style: "normal",
-		             			font: font,
-		             			bevelThickness: 0.05,
-		             			bevelSize: 0.04,
-		             			bevelEnabled: true
-		             		});
-		             	var matTexto = new THREE.MeshBasicMaterial( {color:'red'} );
-		             	var texto = new THREE.Mesh( geoTexto, matTexto );
-		             	scene.add( texto );
-		             	texto.position.x = -1;
-		             });
+	var tloader = new THREE.TextureLoader();
+	loader.load(
+	''
+	);
 
 
 	// Grafo
