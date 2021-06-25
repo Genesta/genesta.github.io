@@ -118,7 +118,7 @@ function loadScene() {
 
     // 1. Crear el elemento de video en el documento
     video = document.createElement('video');
-    video.src = "videos/pixar.mp4";
+    video.src = "videos/pixar.mp4"; 
     video.muted = true;
     video.load();
     video.play();

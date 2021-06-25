@@ -108,5 +108,9 @@ function render() {
 	// Blucle de refresco
 	requestAnimationFrame( render );
 	update();
+    renderer.clear();
+    renderer.setViewport(0,0,window.innerWidth,window.innerHeight);
 	renderer.render( scene, camera );
+    renderer.setViewport( 10,10,200,200 );
+    renderer.render( scene, minicam );
 }
