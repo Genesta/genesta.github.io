@@ -167,7 +167,7 @@ function loadScene() {
 	esfera.receiveShadow = esfera.castShadow = true;
 
 	// Suelo
-	var texSuelo = new THREE.TextureLoader().load(path+"wet_ground.jpg");
+	var texSuelo = new THREE.TextureLoader().load(path+"r_256.jpg");
 	texSuelo.minFilter = THREE.LinearFilter;
 	texSuelo.magFilter = THREE.LinearFilter;
 	texSuelo.repeat.set( 2,3 );
