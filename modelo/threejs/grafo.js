@@ -160,13 +160,28 @@ function loadScene() {
 						console.log( 'An error happened' );
 				}
 	});
+	// Habitacion
+	var shader = THREE.ShaderLib.cube;
+    var entorno = [ "lib/posx.jpg" , "lib/negx.jpg",
+	                "lib/posy.jpg" , "lib/negy.jpg",
+	                "lib/posz.jpg" , "lib/negz.jpg"];
 
+	var matParedes = new THREE.ShaderMaterial( {
+						vertexShader: shader.vertexShader,
+						fragmentShader: shader.fragmentShader,
+						uniforms: shader.uniforms,
+						depthWrite: false,
+						side: THREE.BackSide
+	} );
+
+	var habitacion = new THREE.Mesh( new THREE.CubeGeometry(30,30,30), matParedes );
+    habitacion.name = 'habitacion';
 
 	// Grafo
-
 	scene.add( conjunto );
 	scene.add( new THREE.AxesHelper(3) );
 	scene.add( suelo );
+	scene.add( habitacion );
 }
 
 function update()
@@ -174,8 +189,64 @@ function update()
 	// Cambiar propiedades entre frames
 
 	angulo += Math.PI/100;
-	esfera.rotation.y = angulo;
+	mueble.rotation.y = angulo;
 	conjunto.rotation.y = angulo/10;
+	
+	// Cambio por demanda de usuario
+	conjunto.position.y = effectControls.posY;
+	mesa.position.x = -effectControls.separacion;
+	materialUsuario.setValues( {color:effectControls.color} );
+	
+	
+}
+function updateAspectRatio()
+{
+	// Mantener la relacion de aspecto entre marco y camara
+
+	var aspectRatio = window.innerWidth/window.innerHeight;
+	// Renovar medidas de viewport
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	// Para la perspectiva
+	camera.aspect = aspectRatio;
+	// Para la ortografica
+	// camera.top = 10/aspectRatio;
+	// camera.bottom = -10/aspectRatio;
+
+	// Hay que actualizar la matriz de proyeccion
+	camera.updateProjectionMatrix();
+}
+
+function setupGUI()
+{
+	// Interfaz grafica de usuario 
+
+	// Controles
+	effectControls = {
+		color: [],
+		caja: true,
+		color: "rgb(255,0,0)"
+	};
+
+	// Interfaz
+	var gui = new dat.GUI();
+	var folder = gui.addFolder("Cambiar color mueble");
+	var aux = {
+		folder.add( effectControls, "color", {
+		Blanco: 
+		var txmesa = new THREE.TextureLoader().load('images/blanco.jpeg');
+		gltf.material.setValues({map:txmesa});
+		,Marron:
+		var txmesa = new THREE.TextureLoader().load('images/marron.png');
+		gltf.material.setValues({map:txmesa});
+		,Natural:
+		var txmesa = new THREE.TextureLoader().load('images/natural.png');
+		gltf.material.setValues({map:txmesa});
+		
+		} ).name("Color");
+		
+	}
+	folder.add( effectControls, "caja" ).name("Ver mueble 3D");
+	
 }
 
 function render() {
