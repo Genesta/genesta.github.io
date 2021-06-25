@@ -11,13 +11,16 @@
 var renderer, scene, camera;
 
 // Otras variables
-var angulo =0 ;
-var esfera;
-var conjunto;
 
+var esfera, cubo, conjunto;
+
+//dependientes del tiempo
+var angulo =0 ;
+var antes=Date.now();
+//Acciones
 init();
 loadScene();
-render();
+render();//funcion que se va a repetir, se encola a si misma
 
 function init() {
 	// Funcion de inicializacion de motor, escena y camara
@@ -29,10 +32,10 @@ function init() {
 	document.getElementById('container').appendChild(renderer.domElement);
 
 	// Escena
-	scene = new THREE.Scene();
+	scene = new THREE.Scene(); //object 3D nodo raiz del que cuelgan todos los demas objetos
 
 	// Camara
-	var aspectRatio = window.innerWidth/window.innerHeight;
+	var aspectRatio = window.innerWidth/window.innerHeight; //lienzo> area total del cliente, esta fraccion es la que da el aspect ratio
 	camera = new THREE.PerspectiveCamera( 75, aspectRatio, 0.1, 100 );
 	camera.position.set( 0.5, 2, 5 );
 	camera.lookAt( new THREE.Vector3( 0,0,0 ) );
@@ -40,14 +43,10 @@ function init() {
 
 function loadScene() {
 	// Construye el grafo de escena
-	// - Objetos (geometria, material)
-	// - Transformaciones 
-	// - Organizar el grafo
-
 	// Objeto contenedor de cubo y esfera
 	conjunto = new THREE.Object3D();
 	conjunto.position.y = 1;
-
+/****************CUBO***********************/
 	// Cubo
 	var geoCubo = new THREE.BoxGeometry(2,2,2);
 	var matCubo = new THREE.MeshBasicMaterial( {color:'green',wireframe:true} );
@@ -68,7 +67,7 @@ function loadScene() {
 
 	// Objeto importado
 	var loader = new THREE.ObjectLoader();
-	loader.load( 'models/soldado/soldado.json', 
+	loader.load( 'mueble/scene.gltf', 
 		         function (objeto){
                     objeto.scale.set(0.8,0.8,0.8);
                     objeto.position.y = -1;
