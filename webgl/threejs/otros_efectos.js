@@ -208,7 +208,22 @@ function loadScene() {
 		         	//volver.chain( salto );
 
 		         });
-
+	var gloader = new THREE.GLTFLoader();
+	loader.load('mueble/scene.gltf', 
+			function(gltf){
+				gltf.name = 'mesa';
+				gltf.position.y = 1;
+				mesa = gltf.scene.children[0];
+				mesa.scale.set(0.8,0.8,0.8);
+				scene.add(gltf.scene);
+				var txmesa = new THREE.TextureLoader().load('images/blanco.jpeg');
+				gltf.material.setValues({map:txsoldado});
+				gltf.castShadow = true;
+				//var marron = THREE.ImageUtils.loadTexture('images/marron.png');
+				//var natural = THREE.ImageUtils.loadTexture('images/natural.png');
+				
+				animate();
+	});
 	// Texto
 	var fontLoader = new THREE.FontLoader();
 	materialUsuario = new THREE.MeshPhongMaterial({color:'red',

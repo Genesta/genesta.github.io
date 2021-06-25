@@ -9,20 +9,30 @@
 
 // Variables globales estandar
 var renderer, scene, camera;
-var blanco = THREE.ImageUtils.loadTexture('images/blanco.jpeg');
-var marron = THREE.ImageUtils.loadTexture('images/marron.png');
-var natural = THREE.ImageUtils.loadTexture('images/natural.png');
+
 
 // Otras variables
-
+//var blanco = THREE.ImageUtils.loadTexture('images/blanco.jpeg');
+//var marron = THREE.ImageUtils.loadTexture('images/marron.png');
+//var natural = THREE.ImageUtils.loadTexture('images/natural.png');
 var conjunto;
+var materialUsuario;
+
+// Control
+var cameraControls, effectControls;
 
 //dependientes del tiempo
 var angulo =0 ;
 var antes=Date.now();
+
+// Variables para video
+var video, videoImage, videoImageContent, videoTexture;
+var minicam
+
 //Acciones
 init();
 loadScene();
+setupGUI();
 render();//funcion que se va a repetir, se encola a si misma
 
 function init() {
@@ -32,6 +42,8 @@ function init() {
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.setClearColor( new THREE.Color(0x000000) );
+	renderer.shadowMap.enabled = true;
+    renderer.autoClear = false;
 	document.getElementById('container').appendChild(renderer.domElement);
 
 	// Escena
@@ -42,26 +54,62 @@ function init() {
 	camera = new THREE.PerspectiveCamera( 75, aspectRatio, 0.1, 100 );
 	camera.position.set( 0.5, 2, 5 );
 	camera.lookAt( new THREE.Vector3( 0,0,0 ) );
+    scene.add(camera);
+
+	// Control de camara
+	cameraControls = new THREE.OrbitControls( camera, renderer.domElement );
+	cameraControls.target.set( 0, 0, 0 );
+	cameraControls.noZoom = false;
+
+    // Minicam .....................................................
+    minicam = new THREE.OrthographicCamera(-10,10, 10,-10, -10,100);
+    minicam.position.set(0,1,0);
+    minicam.up.set(0,0,-1);
+    minicam.lookAt(0,-1,0);
+    scene.add(minicam);
+    // .............................................................
+
+	// Luces
+	var ambiental = new THREE.AmbientLight(0x222222);
+	scene.add(ambiental);
+
+	var direccional = new THREE.DirectionalLight( 0xFFFFFF, 0.2 );
+	direccional.position.set( 0,1,0 );
+	scene.add( direccional );
+
+	var puntual = new THREE.PointLight( 0xFFFFFFF, 0.3 );
+	puntual.position.set( 2, 7, -4 );
+	scene.add( puntual );
+
+	var focal = new THREE.SpotLight( 0xFFFFFF, 0.5 );
+	focal.position.set( -2, 7, 4 );
+	focal.target.position.set( 0,0,0 );
+	focal.angle = Math.PI/7;
+	focal.penumbra = 0.5;
+	focal.castShadow = true;
+
+	scene.add( focal );
+
+	// Atender eventos
+	window.addEventListener( 'resize', updateAspectRatio );
 }
 
 function loadScene() {
 	// Construye el grafo de escena
 	// Objeto contenedor de cubo y esfera
 	conjunto = new THREE.Object3D();
+	conjunto.name = 'conjunto';
 	conjunto.position.y = 1;
 
-	// Cubo
-
-
-	// Esfera
-
-
 	// Suelo
-	var geoSuelo = new THREE.PlaneGeometry(10,10,12,12);
-	var matSuelo = new THREE.MeshBasicMaterial( {color:'grey', wireframe: false} );
+	var texSuelo = new THREE.TextureLoader().load("images/wet_ground.jpg");
+	var geoSuelo = new THREE.PlaneGeometry(10,10,200,200);
+	var matSuelo = new THREE.MeshLambertMaterial( {color:'gray', map:texSuelo} );
 	var suelo = new THREE.Mesh( geoSuelo, matSuelo );
+	suelo.name = 'suelo';
 	suelo.rotation.x = -Math.PI/2;
 	suelo.position.y = -0.1;
+	suelo.receiveShadow = true;
 
 	// Objeto importado
 	/*var loader = new THREE.ObjectLoader();
@@ -74,11 +122,20 @@ function loadScene() {
 		         });*/
 				 
 	var gloader = new THREE.GLTFLoader();
-	loader.load('mueble/scene.gltf', function(gltf){
-			mesa = gltf.scene.children[0];
-			mesa.scale.set(0.8,0.8,0.8);
-			scene.add(gltf.scene);
-			animate();
+	loader.load('mueble/scene.gltf', 
+			function(gltf){
+				gltf.name = 'mesa';
+				gltf.position.y = 1;
+				mesa = gltf.scene.children[0];
+				mesa.scale.set(0.8,0.8,0.8);
+				scene.add(gltf.scene);
+				var txmesa = new THREE.TextureLoader().load('images/blanco.jpeg');
+				gltf.material.setValues({map:txsoldado});
+				gltf.castShadow = true;
+				//var marron = THREE.ImageUtils.loadTexture('images/marron.png');
+				//var natural = THREE.ImageUtils.loadTexture('images/natural.png');
+				
+				animate();
 	});
 
 	var tloader = new THREE.TextureLoader();
