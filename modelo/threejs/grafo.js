@@ -120,7 +120,7 @@ function loadScene() {
 		         	objeto.rotation.y = Math.PI/2;
 		         	cubo.add(objeto);
 		         });*/
-				 
+		/*		 
 	var gloader = new THREE.GLTFLoader();
 	loader.load('mueble/scene.gltf', 
 			function(gltf){
@@ -130,23 +130,40 @@ function loadScene() {
 				mesa.scale.set(0.8,0.8,0.8);
 				scene.add(gltf.scene);
 				var txmesa = new THREE.TextureLoader().load('images/blanco.jpeg');
-				gltf.material.setValues({map:txsoldado});
+				gltf.material.setValues({map:txmesa});
 				gltf.castShadow = true;
 				//var marron = THREE.ImageUtils.loadTexture('images/marron.png');
 				//var natural = THREE.ImageUtils.loadTexture('images/natural.png');
 				
 				animate();
 	});
+	*/
+	const gloader = new GLTFLoader();
+	const muebleLoader = new MUEBLELoader();
+	loader.setMUEBLELoader(muebleLoader);
+	loader.load('mueble/scene.gltf', 
+			function(gltf){
+				scene.add(gltf.scene);
+				gltf.name = 'mesa';
+				gltf.position.y = 1;
+				var txmesa = new THREE.TextureLoader().load('images/blanco.jpeg');
+				gltf.material.setValues({map:txmesa});
+				gltf.castShadow = true;
+				//var marron = THREE.ImageUtils.loadTexture('images/marron.png');
+				//var natural = THREE.ImageUtils.loadTexture('images/natural.png');
+				animate();
+				function ( xhr ) {
+						console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 
-	var tloader = new THREE.TextureLoader();
-	loader.load(
-	''
-	);
+				},
+				function ( error ) {
+						console.log( 'An error happened' );
+				}
+	});
 
 
 	// Grafo
-	conjunto.add( cubo );
-	cubo.add( esfera );
+
 	scene.add( conjunto );
 	scene.add( new THREE.AxesHelper(3) );
 	scene.add( suelo );
