@@ -102,7 +102,7 @@ function loadScene() {
 	conjunto.position.y = 1;
 
 	// Suelo
-	var texSuelo = new THREE.TextureLoader().load("images/wet_ground.jpg");
+	var texSuelo = new THREE.TextureLoader().load("images/burberry_256.jpg");
 	var geoSuelo = new THREE.PlaneGeometry(10,10,200,200);
 	var matSuelo = new THREE.MeshLambertMaterial( {color:'gray', map:texSuelo} );
 	var suelo = new THREE.Mesh( geoSuelo, matSuelo );
